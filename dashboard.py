@@ -17,7 +17,14 @@ st.markdown(
         border-radius: 0.5rem;
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
         padding: 1rem;
+        margin: 1rem 0;
         background-color: #f5f5f5;
+        border: 1px solid #d4d4d4;
+        
+    }
+     .shadcn-card:hover {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        duration: 0.3s;
     }
 
     .shadcn-card-title {
@@ -29,6 +36,19 @@ st.markdown(
         font-wight: bold;
         font-size: 2.2rem;
         margin-top: 0.2rem;
+    }
+    
+    .line-v{
+        height: 2px;
+        background-color: #d4d4d4;
+        border-radius: 0.5rem;
+    }
+    
+    .line-h{
+        height: full;
+        width: 10px;
+        background-color: #000;
+        border-radius: 0.5rem;
     }
 </style>
 """,
@@ -155,7 +175,7 @@ if section == "Overview":
             f'<div class="shadcn-card"><p class="shadcn-card-title">Avg Sentiment Score</p><p class="shadcn-card-content">{sentiment_mean_display}</p></div>',
             unsafe_allow_html=True,
         )
-    # Detailed Call Score
+
     with col5:
         detailed_call_mean = safe_mean(df["Detailed Call Score_numeric"])
         detailed_call_mean_display = (
@@ -169,7 +189,8 @@ if section == "Overview":
         )
 
     # Charts
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)  # Use 4 columns for more charts
+
     with col1:
         fig_bant = px.histogram(
             df,
@@ -194,8 +215,34 @@ if section == "Overview":
         st.plotly_chart(fig_intent, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
+    st.markdown('<div class="line-v">', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)  # Use 4 columns for more charts
+
+    with col1:
+        fig_spin = px.histogram(
+            df,
+            x="SPIN Score",
+            title="SPIN Score Distribution",
+            color_discrete_sequence=[colors["tertiary"]],
+        )
+        fig_spin.update_layout(bargap=0.2, plot_bgcolor="white", paper_bgcolor="white")
+        st.plotly_chart(fig_spin, use_container_width=True)
+
+    with col2:
+        fig_sentiment = px.histogram(
+            df,
+            x="Sentiment Analysis Score",
+            title="Sentiment Analysis Score Distribution",
+            color_discrete_sequence=[colors["quaternary"]],
+        )
+        fig_sentiment.update_layout(
+            bargap=0.2, plot_bgcolor="white", paper_bgcolor="white"
+        )
+        st.plotly_chart(fig_sentiment, use_container_width=True)
+
     # Pie Chart for score proportions
-    st.markdown('<div class="shadcn-card">', unsafe_allow_html=True)
+    st.markdown('<div class="line-v"> </div>', unsafe_allow_html=True)
     pie_data = df[
         [
             "BANT Score_numeric",
@@ -210,9 +257,9 @@ if section == "Overview":
         names=pie_data.index,
         title="Average Score Distribution",
         color_discrete_sequence=[
-            colors["primary"],
             colors["secondary"],
             colors["tertiary"],
+            colors["primary"],
             colors["quaternary"],
         ],
     )
