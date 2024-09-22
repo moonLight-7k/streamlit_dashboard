@@ -1,0 +1,24 @@
+{
+  "_id": {
+    "$oid": "66e95d818ad521968b5b801b"
+  },
+  "Filename": "recording 1723036302191.txt",
+  "BANT Score": "6",
+  "Call Intent Score": "8",
+  "Course_Interested": "Game and Esports",
+  "Detailed Call Score": "7",
+  "Feedback for improvement": "Improve clarity and concision in communication",
+  "Follow_Up": "Sunday, 10 a.m.",
+  "Lead_Busy": "No",
+  "Lead_City": "Bengaluru",
+  "Lead_Company": "NA",
+  "Lead_Ctc": "NA",
+  "Lead_Education": "Graduation",
+  "Lead_Experience": "3D artist",
+  "Lead_inquiry_for": "Self",
+  "Lead_interest_level": "Interested",
+  "SPIN Score": "5",
+  "Sentiment Analysis Score": "8",
+  "Date":"23-08-2024",
+  "Summary": "The LC had a conversation with a lead who is interested in the game and esports course. The lead had some questions and concerns which the LC addressed. The LC also offered a 15% scholarship and a free Generative AI program as a complimentary gift. A follow-up call is scheduled for Sunday at 10 a.m."
+}

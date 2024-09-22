@@ -1,0 +1,25 @@
+{
+  "_id": {
+    "$oid": "66e95d818ad521968b5b8019"
+  },
+  "Filename": "recording 1724137035937.txt",
+  "BANT Score": "5",
+  "Call Intent Score": "8",
+  "Course Interested": "AR and VR Technology",
+  "Detailed Call Score": "8",
+  "Feedback for improvement": "The LC should have handled the objection on the course fee more effectively.",
+  "Follow_Up": "NA",
+  "Lead City": "NA",
+  "Lead Company": "MNC",
+  "Lead Ctc": "NA",
+  "Lead Education": "Graduate",
+  "Lead Experience": "15+ years",
+  "Lead_Busy": "No",
+  "Lead_Ctc": "NA",
+  "Lead_inquiry_for": "Self",
+  "Lead_interest_level": "Interested",
+  "SPIN Score": "7",
+  "Sentiment Analysis Score": "8",
+  "Date":"23-08-2024",
+  "Summary": "The LC had a conversation with Mayur, an interior architect with 15+ years of experience, who expressed interest in AR and VR technology to enhance his business. The LC provided information about the course, its benefits, and the fee structure, but Mayur was hesitant to proceed due to the high cost. The LC agreed to share more details and follow up later."
+}

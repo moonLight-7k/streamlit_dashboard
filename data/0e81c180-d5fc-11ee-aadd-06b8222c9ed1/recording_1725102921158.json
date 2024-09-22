@@ -1,0 +1,24 @@
+{
+  "_id": {
+    "$oid": "66e95d818ad521968b5b801a"
+  },
+  "Filename": "recording 1725102921158.txt",
+  "BANT Score": "9",
+  "Call Intent Score": "9",
+  "Course Interested": "Gaming and Esports",
+  "Detailed Call Score": "8",
+  "Follow Up": "NA",
+  "Lead City": "NA",
+  "Lead Company": "NA",
+  "Lead Ctc": "14",
+  "Lead Education": "NA",
+  "Lead Experience": "11",
+  "Lead Occupation": "Web Designer",
+  "Lead Busy": "No",
+  "Lead inquiry for": "Self",
+  "Lead interest level": "Uninterested",
+  "SPIN Score": "7",
+  "Sentiment Analysis Score": "8",
+  "Date": "24-08-2024",
+  "Summary": "NA"
+}
