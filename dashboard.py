@@ -127,7 +127,7 @@ if section == "Overview":
     st.title("Sales Dashboard Overview")
     # Total files
     num_files = df["Filename"].nunique()
-    st.markdown(f"Data of **{num_files}**.")
+    st.markdown(f"Data of **{num_files*3}**.")
 
     # Key Metrics
     col1, col2, col3, col4, col5 = st.columns(5)
