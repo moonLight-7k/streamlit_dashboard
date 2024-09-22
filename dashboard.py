@@ -188,6 +188,56 @@ if section == "Overview":
             unsafe_allow_html=True,
         )
 
+    # Radar Chart for Course Interested and various scores
+
+    # Define categories for the radar chart
+    categories = [
+        "BANT Score",
+        "Call Intent Score",
+        "SPIN Score",
+        "Sentiment Analysis Score",
+        "Detailed Call Score",
+    ]
+
+    # Filter the rows where "Course Interested" is not "N/A"
+    df_radar = df[df["Course Interested"] != "N/A"]
+
+    if not df_radar.empty:
+        radar_fig = go.Figure()
+
+        # Iterate through the filtered DataFrame and add radar chart traces
+        for idx, row in df_radar.iterrows():
+            radar_fig.add_trace(
+                go.Scatterpolar(
+                    r=[
+                        row["BANT Score_numeric"],
+                        row["Call Intent Score_numeric"],
+                        row["SPIN Score_numeric"],
+                        row["Sentiment Analysis Score_numeric"],
+                        row["Detailed Call Score_numeric"],
+                    ],
+                    theta=categories,
+                    fill="toself",
+                    name=row["Course Interested"],
+                )
+            )
+
+        radar_fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True, range=[0, 10]
+                )  # Adjust the range according to your score scale
+            ),
+            showlegend=True,
+            title="Radar Chart: Course Interested vs Scores",
+        )
+
+        st.plotly_chart(radar_fig, use_container_width=True)
+    else:
+        st.info("No data available for 'Course Interested' field.")
+
+    st.markdown('<div class="line-v"> </div>', unsafe_allow_html=True)
+
     # Charts
     col1, col2 = st.columns(2)  # Use 4 columns for more charts
 
@@ -241,30 +291,61 @@ if section == "Overview":
         )
         st.plotly_chart(fig_sentiment, use_container_width=True)
 
-    # Pie Chart for score proportions
-    st.markdown('<div class="line-v"> </div>', unsafe_allow_html=True)
-    pie_data = df[
-        [
-            "BANT Score_numeric",
-            "Call Intent Score_numeric",
-            "SPIN Score_numeric",
-            "Sentiment Analysis Score_numeric",
-        ]
-    ].mean()
-    fig_pie = px.pie(
-        pie_data,
-        values=pie_data.values,
-        names=pie_data.index,
-        title="Average Score Distribution",
-        color_discrete_sequence=[
-            colors["secondary"],
-            colors["tertiary"],
-            colors["primary"],
-            colors["quaternary"],
-        ],
-    )
-    st.plotly_chart(fig_pie, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    col1, col2 = st.columns(2)  # Use 4 columns for more charts
+    with col1:
+        # Pie Chart for score proportions
+        st.markdown('<div class="line-v"> </div>', unsafe_allow_html=True)
+        pie_data = df[
+            [
+                "BANT Score_numeric",
+                "Call Intent Score_numeric",
+                "SPIN Score_numeric",
+                "Sentiment Analysis Score_numeric",
+            ]
+        ].mean()
+        fig_pie = px.pie(
+            pie_data,
+            values=pie_data.values,
+            names=pie_data.index,
+            title="Average Score Distribution",
+            color_discrete_sequence=[
+                colors["secondary"],
+                colors["tertiary"],
+                colors["primary"],
+                colors["quaternary"],
+            ],
+        )
+        st.plotly_chart(fig_pie, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with col2:
+        # Bar Graph for Lead City (including "N/A")
+        st.markdown('<div class="line-v"> </div>', unsafe_allow_html=True)
+        st.subheader("Lead City Distribution")
+
+        # Group by Lead City, including "N/A"
+        city_counts = df["Lead City"].value_counts(dropna=False).reset_index()
+        city_counts.columns = ["Lead City", "Count"]
+
+        # Create bar chart for Lead City
+        fig_lead_city = px.bar(
+            city_counts,
+            x="Lead City",
+            y="Count",
+            title="Lead City Distribution",
+            text="Count",
+            color_discrete_sequence=[colors["primary"]],
+        )
+
+        fig_lead_city.update_layout(
+            xaxis_title="Lead City",
+            yaxis_title="Count",
+            plot_bgcolor="white",
+            paper_bgcolor="white",
+        )
+
+        st.plotly_chart(fig_lead_city, use_container_width=True)
+
 
 # People section
 elif section == "People":
@@ -285,9 +366,13 @@ elif section == "People":
     # Person-specific charts (you can customize these based on your needs)
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown('<div class="shadcn-card">', unsafe_allow_html=True)
+        st.markdown('<div class="line-v">', unsafe_allow_html=True)
         # Example: Average scores for the selected folder
-        average_scores = folder_data[score_columns].mean()
+        # Convert non-numeric values to NaN and calculate the mean
+        numeric_scores = folder_data[score_columns].apply(
+            pd.to_numeric, errors="coerce"
+        )
+        average_scores = numeric_scores.mean()
         fig_scores = go.Figure(
             data=[go.Bar(x=average_scores.index, y=average_scores.values)]
         )
@@ -296,7 +381,7 @@ elif section == "People":
         st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="shadcn-card">', unsafe_allow_html=True)
+        st.markdown('<div class="line-v">', unsafe_allow_html=True)
         # Example: Sentiment Analysis over time for the folder
         fig_sentiment = px.line(
             folder_data,
