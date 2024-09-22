@@ -6,27 +6,61 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 
-# Set page config
 st.set_page_config(layout="wide", page_title="Sales Dashboard")
+
+# Custom CSS for Shadcn-inspired UI
+st.markdown(
+    """
+<style>
+    /* Add your CSS styles here to match Shadcn's design */
+    .shadcn-card {
+        border-radius: 0.5rem;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        background-color: #f5f5f5;
+    }
+
+    .shadcn-card-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .shadcn-card-content {
+        font-wight: bold;
+        font-size: 2.2rem;
+        margin-top: 0.2rem;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+# Color palette
+colors = {
+    "primary": "#3498db",  # Blue
+    "secondary": "#2ecc71",  # Green
+    "tertiary": "#e74c3c",  # Red
+    "quaternary": "#f39c12",  # Orange
+    "background": "#ffffff",
+    "text": "#000000",
+}
 
 
 # Function to fetch data from nested folders with error handling
 def fetch_data_from_nested_folders(main_folder_path):
     all_data = []
     try:
-        for person_folder in os.listdir(main_folder_path):
-            person_folder_path = os.path.join(main_folder_path, person_folder)
-            if os.path.isdir(person_folder_path):
-                for filename in os.listdir(person_folder_path):
+        for folder_name in os.listdir(main_folder_path):
+            folder_path = os.path.join(main_folder_path, folder_name)
+            if os.path.isdir(folder_path):
+                for filename in os.listdir(folder_path):
                     if filename.endswith(".json"):
-                        file_path = os.path.join(person_folder_path, filename)
+                        file_path = os.path.join(folder_path, filename)
                         try:
                             with open(file_path, "r") as file:
                                 data = json.load(file)
-                                data["Person"] = person_folder
-                                data["Filename"] = (
-                                    filename  # Add filename for reference
-                                )
+                                data["Folder"] = folder_name
+                                data["Filename"] = filename
                                 all_data.append(data)
                         except json.JSONDecodeError:
                             st.warning(f"Could not decode JSON from {file_path}.")
@@ -58,26 +92,6 @@ score_columns = [
 for col in score_columns:
     df[f"{col}_numeric"] = pd.to_numeric(df[col], errors="coerce")
 
-# Custom CSS for black and white shadcn-inspired UI
-st.markdown(
-    """
-<style>
-    /* Add your CSS styles here */
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-# Color palette
-colors = {
-    "primary": "#3498db",  # Blue
-    "secondary": "#2ecc71",  # Green
-    "tertiary": "#e74c3c",  # Red
-    "quaternary": "#f39c12",  # Orange
-    "background": "#ffffff",
-    "text": "#000000",
-}
-
 # Sidebar
 st.sidebar.title("Dashboard Navigation")
 section = st.sidebar.radio("Go to:", ["Overview", "People"])
@@ -91,9 +105,12 @@ def safe_mean(series):
 # Overview section
 if section == "Overview":
     st.title("Sales Dashboard Overview")
+    # Total files
+    num_files = df["Filename"].nunique()
+    st.markdown(f"Data of **{num_files}**.")
 
     # Key Metrics
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
         bant_mean = safe_mean(df["BANT Score_numeric"])
@@ -101,7 +118,7 @@ if section == "Overview":
             f"{bant_mean:.2f}" if isinstance(bant_mean, float) else bant_mean
         )
         st.markdown(
-            f'<div class="card"><p class="card-title">Avg BANT Score</p><p class="metric">{bant_mean_display}</p></div>',
+            f'<div class="shadcn-card"><p class="shadcn-card-title">Avg BANT Score</p><p class="shadcn-card-content">{bant_mean_display}</p></div>',
             unsafe_allow_html=True,
         )
 
@@ -113,7 +130,7 @@ if section == "Overview":
             else call_intent_mean
         )
         st.markdown(
-            f'<div class="card"><p class="card-title">Avg Call Intent Score</p><p class="metric">{call_intent_mean_display}</p></div>',
+            f'<div class="shadcn-card"><p class="shadcn-card-title">Avg Call Intent Score</p><p class="shadcn-card-content">{call_intent_mean_display}</p></div>',
             unsafe_allow_html=True,
         )
 
@@ -123,7 +140,7 @@ if section == "Overview":
             f"{spin_mean:.2f}" if isinstance(spin_mean, float) else spin_mean
         )
         st.markdown(
-            f'<div class="card"><p class="card-title">Avg SPIN Score</p><p class="metric">{spin_mean_display}</p></div>',
+            f'<div class="shadcn-card"><p class="shadcn-card-title">Avg SPIN Score</p><p class="shadcn-card-content">{spin_mean_display}</p></div>',
             unsafe_allow_html=True,
         )
 
@@ -135,14 +152,25 @@ if section == "Overview":
             else sentiment_mean
         )
         st.markdown(
-            f'<div class="card"><p class="card-title">Avg Sentiment Score</p><p class="metric">{sentiment_mean_display}</p></div>',
+            f'<div class="shadcn-card"><p class="shadcn-card-title">Avg Sentiment Score</p><p class="shadcn-card-content">{sentiment_mean_display}</p></div>',
+            unsafe_allow_html=True,
+        )
+    # Detailed Call Score
+    with col5:
+        detailed_call_mean = safe_mean(df["Detailed Call Score_numeric"])
+        detailed_call_mean_display = (
+            f"{detailed_call_mean:.2f}"
+            if isinstance(detailed_call_mean, float)
+            else detailed_call_mean
+        )
+        st.markdown(
+            f'<div class="shadcn-card"><p class="shadcn-card-title">Avg Detailed Call Score</p><p class="shadcn-card-content">{detailed_call_mean_display}</p></div>',
             unsafe_allow_html=True,
         )
 
     # Charts
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
         fig_bant = px.histogram(
             df,
             x="BANT Score",
@@ -154,7 +182,6 @@ if section == "Overview":
         st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
         fig_intent = px.histogram(
             df,
             x="Call Intent Score",
@@ -168,7 +195,7 @@ if section == "Overview":
         st.markdown("</div>", unsafe_allow_html=True)
 
     # Pie Chart for score proportions
-    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown('<div class="shadcn-card">', unsafe_allow_html=True)
     pie_data = df[
         [
             "BANT Score_numeric",
@@ -196,81 +223,39 @@ if section == "Overview":
 elif section == "People":
     st.title("Person-Specific Data")
 
-    # Dropdown to select a specific person
-    people_options = df["Person"].unique()
-    selected_person = st.selectbox("Select a person:", people_options)
+    # Dropdown to select a specific folder
+    folder_options = df["Folder"].unique()
+    selected_folder = st.selectbox("Select a folder:", folder_options)
 
-    # Filter the data for the selected person
-    person_data = df[df["Person"] == selected_person]
+    # Filter the data for the selected folder
+    folder_data = df[df["Folder"] == selected_folder]
 
-    st.subheader(f"Data for {selected_person}")
+    st.subheader(f"Data for {selected_folder}")
 
-    # Display the selected person's data in a card format
-    for _, row in person_data.iterrows():
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        st.markdown(
-            f"""
-        <p><strong>Filename:</strong> {row['Filename']}</p>
-        <p><strong>BANT Score:</strong> {row['BANT Score']}</p>
-        <p><strong>Call Intent Score:</strong> {row['Call Intent Score']}</p>
-        <p><strong>Course Interested:</strong> {row['Course Interested']}</p>
-        <p><strong>Detailed Call Score:</strong> {row['Detailed Call Score']}</p>
-        <p><strong>Feedback for improvement:</strong> {row['Feedback for improvement']}</p>
-        <p><strong>Follow Up:</strong> {row['Follow Up']}</p>
-        <p><strong>Lead City:</strong> {row['Lead City']}</p>
-        <p><strong>Sentiment Analysis Score:</strong> {row['Sentiment Analysis Score']}</p>
-        <p><strong>Date:</strong> {row['Date'].strftime('%d-%m-%Y')}</p>
-        """,
-            unsafe_allow_html=True,
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
+    # Display folder-specific data in a table format
+    st.dataframe(folder_data)
 
-    # Person-specific charts
+    # Person-specific charts (you can customize these based on your needs)
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        fig_scores = go.Figure()
-        fig_scores.add_trace(
-            go.Bar(
-                x=["BANT", "Call Intent", "SPIN", "Sentiment"],
-                y=[
-                    row["BANT Score"],
-                    row["Call Intent Score"],
-                    row["SPIN Score"],
-                    row["Sentiment Analysis Score"],
-                ],
-                marker_color=[
-                    colors["primary"],
-                    colors["secondary"],
-                    colors["tertiary"],
-                    colors["quaternary"],
-                ],
-            )
+        st.markdown('<div class="shadcn-card">', unsafe_allow_html=True)
+        # Example: Average scores for the selected folder
+        average_scores = folder_data[score_columns].mean()
+        fig_scores = go.Figure(
+            data=[go.Bar(x=average_scores.index, y=average_scores.values)]
         )
-        fig_scores.update_layout(
-            title="Score Comparison",
-            yaxis_title="Score",
-            plot_bgcolor="white",
-            paper_bgcolor="white",
-        )
+        fig_scores.update_layout(title="Average Scores")
         st.plotly_chart(fig_scores, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        fig_timeline = px.scatter(
-            person_data,
+        st.markdown('<div class="shadcn-card">', unsafe_allow_html=True)
+        # Example: Sentiment Analysis over time for the folder
+        fig_sentiment = px.line(
+            folder_data,
             x="Date",
             y="Sentiment Analysis Score",
             title="Sentiment Analysis Over Time",
-            color_discrete_sequence=[colors["primary"]],
         )
-        fig_timeline.update_layout(plot_bgcolor="white", paper_bgcolor="white")
-        st.plotly_chart(fig_timeline, use_container_width=True)
+        st.plotly_chart(fig_sentiment, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
-# Footer
-st.sidebar.markdown(
-    '<div class="card"><strong>Designed with a black and white shadcn-inspired UI elements</strong></div>',
-    unsafe_allow_html=True,
-)

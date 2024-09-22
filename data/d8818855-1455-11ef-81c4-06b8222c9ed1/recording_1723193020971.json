@@ -1,24 +1,24 @@
 {
-    "_id": {
-      "$oid": "66e95d818ad521968b5b8015"
-    },
-    "Filename": "recording 1723193020971.txt",
-    "BANT Score": "8",
-    "Call Intent Score": "7",
-    "Course Interested": "N/A",
-    "Detailed Call Score": "6",
-    "Feedback for improvement": "Improve on handling objections and providing clear solutions to lead's concerns",
-    "Follow_Up": "Yes",
-    "Lead City": "Karnataka",
-    "Lead Company": "N/A",
-    "Lead Ctc": "N/A",
-    "Lead Education": "N/A",
-    "Lead Experience": "N/A",
-    "Lead_Busy": "Yes",
-    "Lead_inquiry_for": "Self",
-    "Lead_interest_level": "UnInterested",
-    "SPIN Score": "6",
-    "Sentiment Analysis Score": "7",
-    "Date":"22-08-2024",
-    "Summary": "The lead expressed interest in the course but had concerns about the financial aspect and his upcoming marriage. The LC provided a scholarship offer and explained the benefits of the course, but the lead still seemed uncertain. A follow-up call was scheduled to discuss further."
-  }
+  "_id": {
+    "$oid": "66e95d818ad521968b5b8015"
+  },
+  "Filename": "recording 1723193020971.txt",
+  "BANT Score": "8",
+  "Call Intent Score": "7",
+  "Course Interested": "N/A",
+  "Detailed Call Score": "6",
+  "Feedback for improvement": "Improve on handling objections and providing clear solutions to lead's concerns",
+  "Follow Up": "Yes",
+  "Lead City": "Karnataka",
+  "Lead Company": "N/A",
+  "Lead Ctc": "N/A",
+  "Lead Education": "N/A",
+  "Lead Experience": "N/A",
+  "Lead Busy": "Yes",
+  "Lead inquiry for": "Self",
+  "Lead interest level": "UnInterested",
+  "SPIN Score": "6",
+  "Sentiment Analysis Score": "7",
+  "Date": "22-08-2024",
+  "Summary": "The lead expressed interest in the course but had concerns about the financial aspect and his upcoming marriage. The LC provided a scholarship offer and explained the benefits of the course, but the lead still seemed uncertain. A follow-up call was scheduled to discuss further."
+}
